@@ -47,46 +47,44 @@ class LinkedList:
         # empty list
         if self.head is None:
             return None
-        else:
-            ret_val = self.head.get_value()
 
-            # list of 1
-            if self.head is self.tail:
-                self.head = self.tail = None
-                return ret_val
+        ret_val = self.head.get_value()
 
-            # list > 1 element
-            self.head = self.head.get_next()
-
+        # list of 1
+        if self.head is self.tail:
+            self.head = self.tail = None
             return ret_val
+
+        # list > 1 element
+        self.head = self.head.get_next()
+
+        return ret_val
 
     def remove_tail(self):
-        # list == 0
+        # list len == 0
         if self.head is None:
             return None
-        else:
-            ret_val = self.tail.get_value()
 
-            # list == 1
-            if self.head is self.tail:
-                self.head = self.tail = None
+        ret_val = self.tail.get_value()
 
-                return ret_val
-
-            # list > 1
-            temp = self.head
-            while temp.get_next() is not None:
-                if temp.get_next() is self.tail:
-                    self.tail = temp
-                    temp.set_next(None)
-                    break
-                temp = temp.get_next()
+        # list len == 1
+        if self.head is self.tail:
+            self.head = self.tail = None
             return ret_val
 
-    def contains(self, value):
-        # loop thru list until next pointer is None
+        # list len > 1
         temp = self.head
+        while temp.get_next() is not self.tail:
+            temp = temp.get_next()
 
+        temp.set_next(None)
+        self.tail = temp
+
+        return ret_val
+
+    def contains(self, value):
+        temp = self.head
+        # loop thru list until temp node is None
         while temp is not None:
             if temp.get_value() == value:
                 return True
