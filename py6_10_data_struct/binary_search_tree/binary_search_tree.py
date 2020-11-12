@@ -21,12 +21,14 @@ class BSTNode:
     def insert(self, value):
         # go left
         if value < self.value:
+            # base case
             if self.left is None:
                 self.left = BSTNode(value)
                 return
             self.left.insert(value)
         # go right
         else:
+            # base case
             if self.right is None:
                 self.right = BSTNode(value)
                 return
