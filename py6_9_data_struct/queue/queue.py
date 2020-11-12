@@ -55,10 +55,10 @@ class QueuePythonLists:
         return self.size
 
     def enqueue(self, value):
-        self.storage.insert(0, value)
+        self.storage.append(value)
         self.size = len(self.storage)
 
     def dequeue(self):
-        ret_val = self.storage.pop() if self.size > 0 else None
+        ret_val = self.storage.pop(0) if self.size > 0 else None
         self.size = len(self.storage)
         return ret_val
