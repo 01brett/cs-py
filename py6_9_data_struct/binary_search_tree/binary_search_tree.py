@@ -78,9 +78,11 @@ class BSTNode:
         # call the fn
         fn(self.value)
         # go left
-        self.left and self.left.for_each(fn)
+        if self.left:
+            self.left.for_each(fn)
         # go right
-        self.right and self.right.for_each(fn)
+        if self.right:
+            self.right.for_each(fn)
 
     #
     # Part 2 -------------------------
@@ -89,9 +91,13 @@ class BSTNode:
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
     def in_order_print(self):
-        self.left and self.left.in_order_print()
+        if self.left:
+            self.left.in_order_print()
+
         print(self.value)
-        self.right and self.right.in_order_print()
+
+        if self.right:
+            self.right.in_order_print()
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
@@ -103,8 +109,10 @@ class BSTNode:
             node = queue.pop(0)
             print(node.value)
 
-            node.left and queue.append(node.left)
-            node.right and queue.append(node.right)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
@@ -116,8 +124,10 @@ class BSTNode:
             node = stack.pop()
             print(node.value)
 
-            node.right and stack.append(node.right)
-            node.left and stack.append(node.left)
+            if node.right:
+                stack.append(node.right)
+            if node.left:
+                stack.append(node.left)
 
     #
     # Stretch Goals -------------------------
@@ -127,14 +137,20 @@ class BSTNode:
     # root, left, right
     def pre_order_dft(self):
         print(self.value)
-        self.left and self.left.pre_order_dft()
-        self.right and self.right.pre_order_dft()
+
+        if self.left:
+            self.left.pre_order_dft()
+        if self.right:
+            self.right.pre_order_dft()
 
     # Print Post-order recursive DFT
     # left, right, root
     def post_order_dft(self):
-        self.left and self.left.post_order_dft()
-        self.right and self.right.post_order_dft()
+        if self.left:
+            self.left.post_order_dft()
+        if self.right:
+            self.right.post_order_dft()
+
         print(self.value)
 
 
