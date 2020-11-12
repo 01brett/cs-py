@@ -46,28 +46,19 @@ Using Python Lists
 """
 
 
-# class QueuePythonLists:
-#     def __init__(self):
-#         self.storage = []
-#         self.size = 0
+class QueuePythonLists:
+    def __init__(self):
+        self.storage = []
+        self.size = 0
 
-#     def __len__(self):
-#         return self.size
+    def __len__(self):
+        return self.size
 
-#     def enqueue(self, value):
-#         self.storage.append(value)
-#         self.size = len(self.storage)
+    def enqueue(self, value):
+        self.storage.insert(0, value)
+        self.size = len(self.storage)
 
-#     def dequeue(self):
-#         if self.size == 0:
-#             return None
-#         else:
-#             ret_val = self.storage[0]
-
-#             if self.size == 1:
-#                 self.storage = []
-#             else:
-#                 self.storage = self.storage[1:]
-
-#             self.size = len(self.storage)
-#             return ret_val
+    def dequeue(self):
+        ret_val = self.storage.pop() if self.size > 0 else None
+        self.size = len(self.storage)
+        return ret_val

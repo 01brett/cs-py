@@ -52,23 +52,10 @@ class StackPythonLists:
         return self.size
 
     def push(self, value):
-        if self.size == 0:
-            self.storage.append(value)
-        else:
-            self.storage.insert(0, value)
-
+        self.storage.append(value)
         self.size = len(self.storage)
 
     def pop(self):
-        if self.size == 0:
-            return None
-        else:
-            ret_val = self.storage[0]
-
-            if self.size == 1:
-                self.storage = []
-            else:
-                self.storage = self.storage[1:]
-
-            self.size = len(self.storage)
-            return ret_val
+        ret_val = self.storage.pop() if self.size > 0 else None
+        self.size = len(self.storage)
+        return ret_val
