@@ -48,8 +48,8 @@ class BSTNode:
         #             break
         #         temp = temp.right
 
-    # Return True if the tree contains the value
-    # False if it does not
+    # return True if the tree contains the value
+    # return False if it does not
     def contains(self, target):
         # base case
         if target == self.value:
@@ -75,12 +75,14 @@ class BSTNode:
 
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
-        # apply the fn
+        # call the fn
         fn(self.value)
         # go left
-        self.left and self.left.for_each(fn)
+        if self.left:
+            self.left.for_each(fn)
         # go right
-        self.right and self.right.for_each(fn)
+        if self.right:
+            self.right.for_each(fn)
 
     #
     # Part 2 -------------------------
@@ -89,30 +91,61 @@ class BSTNode:
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
     def in_order_print(self):
-        pass
+        if self.left:
+            self.left.in_order_print()
+        print(self.value)
+        if self.right:
+            self.right.in_order_print()
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
     def bft_print(self):
-        pass
+        # create a queue to keep track of nodes
+        queue = []
+        # enqueue self (root) into queue
+        queue.append(self)
+        # while loop - queue is not empty
+        while len(queue) > 0:
+            # use existing for_each()
+            # enqueue to START, dequeue when DONE
+            # print()
+            break
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
     def dft_print(self):
-        pass
+        # create a stack to keep track of nodes we are processing
+        stack = []
+        # push self (root) into stack
+        stack.append(self)
+        # while loop - stack is not empty (aka not done processing nodes)
+        while len(stack) > 0:
+            break
+            # use existing for_each() as a reference for traversal logic
+            # push when we START processing node, pop when a node is DONE
+            # don't forget to call print()
 
     #
     # Stretch Goals -------------------------
     # Note: Research may be required
-    #
 
     # Print Pre-order recursive DFT
+    # root, left, right
     def pre_order_dft(self):
-        pass
+        print(self.value)
+        if self.left:
+            self.left.pre_order_dft()
+        if self.right:
+            self.right.pre_order_dft()
 
     # Print Post-order recursive DFT
+    # left, right, root
     def post_order_dft(self):
-        pass
+        if self.left:
+            self.left.post_order_dft()
+        if self.right:
+            self.right.post_order_dft()
+        print(self.value)
 
 
 """
@@ -128,15 +161,15 @@ bst.insert(3)
 bst.insert(4)
 bst.insert(2)
 
-# bst.bft_print()
-# bst.dft_print()
+bst.bft_print()
+bst.dft_print()
 
-# print("elegant methods")
-# print("pre order")
-# bst.pre_order_dft()
+print("elegant methods")
+print("\npre order")
+bst.pre_order_dft()
 
-# print("in order")
-# bst.in_order_dft()
+print("\nin order")
+bst.in_order_print()
 
-# print("post order")
-# bst.post_order_dft()
+print("\npost order")
+bst.post_order_dft()
