@@ -12,9 +12,9 @@ class ListNode:
 
     def detach(self):
         if self.prev:
-            self.prev = None
+            self.prev.next = self.next
         if self.next:
-            self.next = None
+            self.next.prev = self.prev
 
 
 """
@@ -39,17 +39,13 @@ class DoublyLinkedList:
     """
 
     def add_to_head(self, value):
-        # create new_node
         new_node = ListNode(value)
-        # empty list
         if self.head is None:
             self.head = self.tail = new_node
-        # non-empty list
         else:
             new_node.next = self.head
             self.head.prev = new_node
             self.head = new_node
-        # update length
         self.length += 1
 
     """
@@ -72,17 +68,13 @@ class DoublyLinkedList:
     """
 
     def add_to_tail(self, value):
-        # create new_node
         new_node = ListNode(value)
-        # empty list
         if self.head is None:
             self.head = self.tail = new_node
-        # non-empty list
         else:
             new_node.prev = self.tail
             self.tail.next = new_node
             self.tail = new_node
-        # update length
         self.length += 1
 
     """
@@ -104,13 +96,10 @@ class DoublyLinkedList:
     """
 
     def move_to_front(self, node):
-        # can't move node cause it's already at front
         if node is self.head:
             return
         val = node.value
-        # sever pointers of node
         self.delete(node)
-        # make new node at head with value
         self.add_to_head(val)
 
     """
@@ -133,22 +122,15 @@ class DoublyLinkedList:
         # base case / empty list
         if self.head is None or node is None:
             return
-
-        # list len == 1
+        # list length == 1
         elif self.head is self.tail:
             self.head = self.tail = None
-        # node is head
+        # node == head
         elif node is self.head:
             self.head = node.next
-            self.head.prev = None
-        # node is tail
+        # node == tail
         elif node is self.tail:
             self.tail = node.prev
-            self.tail.next = None
-        # node has other nodes around it
-        else:
-            node.next.prev = node.prev
-            node.prev.next = node.next
 
         node.detach()
         self.length -= 1
@@ -164,7 +146,7 @@ class DoublyLinkedList:
 
         max_val = self.head.value
         temp = self.head.next
-        while temp is not None:
+        while temp:  # same as -> temp is not None
             if temp.value > max_val:
                 max_val = temp.value
             temp = temp.next
