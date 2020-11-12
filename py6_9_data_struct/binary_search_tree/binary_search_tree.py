@@ -116,8 +116,8 @@ class BSTNode:
             node = stack.pop()
             print(node.value)
 
-            node.left and stack.append(node.left)
             node.right and stack.append(node.right)
+            node.left and stack.append(node.left)
 
     #
     # Stretch Goals -------------------------
