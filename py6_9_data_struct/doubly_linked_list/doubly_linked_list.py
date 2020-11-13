@@ -98,9 +98,8 @@ class DoublyLinkedList:
     def move_to_front(self, node):
         if node is self.head:
             return
-        val = node.value
         self.delete(node)
-        self.add_to_head(val)
+        self.add_to_head(node.value)
 
     """
     Removes the input node from its current spot in the 
