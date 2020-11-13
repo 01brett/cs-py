@@ -15,7 +15,6 @@ class RingBuffer:
         # under capacity
         else:
             self.store.append(item)
-            self.cur += 1
 
     def get(self):
         return self.store
