@@ -40,8 +40,12 @@ class LinkedList:
         return False
 
     def reverse_list(self, node, prev):
+        # base case
         if node is None:
+            # we've reached the end, assign the head!
             self.head = prev
             return
+        # recursive work
         self.reverse_list(node.get_next(), node)
+        # after we drill down, do our next assignment on our way back up
         node.set_next(prev)
