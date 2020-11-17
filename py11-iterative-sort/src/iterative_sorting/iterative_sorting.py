@@ -56,16 +56,16 @@ def counting_sort(arr, maximum=None):
     if maximum is None:
         maximum = max(arr)
 
-    buckets = [0 for _ in range(maximum + 1)]
+    counter = [0 for _ in range(maximum + 1)]
 
     for val in arr:
         if val < 0:
             return "Error, negative numbers not allowed in Count Sort"
-        buckets[val] += 1
+        counter[val] += 1
 
-    output = []
+    sorted_arr = []
 
-    for idx, count in enumerate(buckets):
-        output.extend([idx for _ in range(count)])
+    for idx, count in enumerate(counter):
+        sorted_arr.extend([idx for _ in range(count)])
 
-    return output
+    return sorted_arr
