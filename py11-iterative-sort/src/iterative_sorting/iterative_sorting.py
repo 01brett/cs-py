@@ -2,30 +2,26 @@
 def selection_sort(arr):
     if len(arr) < 2:
         return arr
-    # loop through n-1 elements
-    for idx in range(0, len(arr) - 1):
-        smallest_idx = idx
-        # TO-DO: find next smallest element
-        # (hint, can do in 3 loc)
-        for j in range(idx + 1, len(arr)):
-            # TO-DO: swap
+    # this loop essentially moves the boundary
+    for i in range(0, len(arr) - 1):
+        smallest_idx = i
+        # find next smallest element
+        for j in range(i + 1, len(arr)):
             if arr[j] < arr[smallest_idx]:
                 smallest_idx = j
-
-        arr[smallest_idx], arr[idx] = arr[idx], arr[smallest_idx]
+        # Python's handy "swap" syntax
+        arr[smallest_idx], arr[i] = arr[i], arr[smallest_idx]
 
     return arr
 
 
 # TO-DO:  implement the Bubble Sort function below
 def bubble_sort(arr):
-    # for i in range(len(arr) - 1):
-    #     for j in range(i + 1, len(arr)):
-    #         if arr[i] > arr[j]:
-    #             arr[i], arr[j] = arr[j], arr[i]
     swap = True
     while swap:
         swap = False
+        # we do len(arr) - 1 so that we stop just before the last ele
+        # then when we do the compare, the last value is in range
         for i in range(len(arr) - 1):
             if arr[i] > arr[i + 1]:
                 arr[i], arr[i + 1] = arr[i + 1], arr[i]
