@@ -3,7 +3,13 @@ class Heap:
         self.storage = []
 
     def insert(self, value):
-        pass
+        size = len(self.storage)
+        if size == 0:
+            self.storage.append(value)
+            return
+        root = self.storage[0]
+        if value > root:
+            self.storage
 
     def delete(self):
         pass
