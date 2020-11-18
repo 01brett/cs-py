@@ -26,7 +26,7 @@ def quicksort(arr):
     left, pivot, right = partition(arr)  # Python destructuring
 
     # concatenates our arrays together
-    # [pivot] just places our pivot val into an arr to aid arr concatenation
+    # [pivot] just places our pivot val into an arr to allow arr concatenation
     return quicksort(left) + [pivot] + quicksort(right)
 
 
@@ -92,13 +92,13 @@ def merge_in_place(arr, start, mid, end):
             start2 += 1
 
 
-def merge_sort_in_place(arr, l, r):
-    if l < r:  # arr of 1 is sorted
-        # Same as (l + r) / 2, but avoids overflow for large l and r
-        mid = l + (r - l) // 2
+def merge_sort_in_place(arr, left, right):
+    if left < right:  # arr of 1 is sorted
+        # Same as (left + right) / 2, but avoids overflow for large left and right
+        mid = left + (right - left) // 2
 
         # Sort first and second halves
-        merge_sort_in_place(arr, l, mid)
-        merge_sort_in_place(arr, mid + 1, r)
+        merge_sort_in_place(arr, left, mid)
+        merge_sort_in_place(arr, mid + 1, right)
 
-        merge_in_place(arr, l, mid, r)
+        merge_in_place(arr, left, mid, right)
