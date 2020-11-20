@@ -4,30 +4,32 @@ Returns: a List of integers
 """
 
 
+def sliding_window_max(nums, k):
+    # grab max_val from first window
+    m = max(nums[:k])
+    result = [m]
+
+    for i in range(1, len(nums) + 1 - k):
+        # if incoming num is bigger than max,
+        # set it to the incoming num
+        if nums[i + k - 1] > m:
+            m = nums[i + k - 1]
+        # if outgoing num `was` max,
+        # compute a new max from the new window
+        elif nums[i - 1] == m:
+            m = max(nums[i : i + k])
+        # add current max_val to result array
+        result.append(m)
+
+    return result
+
+
 # def sliding_window_max(nums, k):
 #     ans = []
-#     start = 0
-#     window = k
-#     end = len(nums) + 1 - k
-
-#     while start < end:
-#         maxv = nums[start]
-#         for i in range(start, window):
-#             if nums[i] > maxv:
-#                 maxv = nums[i]
-        
-#         ans.append(maxv)
-#         start += 1
-#         window += 1
-
+#     for i in range(len(nums) + 1 - k):
+#         window = nums[i : i + k]
+#         ans.append(max(window))
 #     return ans
-
-def sliding_window_max(nums, k):
-    ans = []
-    for i in range(len(nums) + 1 - k):
-        window = nums[i : i + k]
-        ans.append(max(window))
-    return ans
 
 
 if __name__ == "__main__":

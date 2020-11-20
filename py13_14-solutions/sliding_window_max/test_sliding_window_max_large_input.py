@@ -2,18 +2,19 @@ import time
 import unittest
 from sliding_window_max import sliding_window_max
 
+
 class Test(unittest.TestCase):
     def test_sliding_window_max_large_input(self):
         arr = []
         k = 1000
 
-        with open("data/input.txt") as file:
+        with open("sliding_window_max/data/input.txt") as file:
             for line in file:
                 arr.append(int(line.strip()))
 
         expected = []
 
-        with open("data/output.txt") as file:
+        with open("sliding_window_max/data/output.txt") as file:
             for line in file:
                 expected.append(int(line.strip()))
 
@@ -25,5 +26,5 @@ class Test(unittest.TestCase):
         self.assertEqual(answer, expected)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
