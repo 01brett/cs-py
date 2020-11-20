@@ -21,6 +21,7 @@ Returns: a List of integers
 def moving_zeroes(arr):
     if len(arr) < 2:
         return arr
+
     i = 0
     end = len(arr)
 

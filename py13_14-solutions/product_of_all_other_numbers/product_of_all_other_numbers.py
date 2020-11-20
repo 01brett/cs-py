@@ -10,7 +10,9 @@ def product_of_all_other_numbers(arr):
     ans = []
 
     for i in range(len(arr)):
+        # make array of items before and after i
         temp = arr[:i] + arr[i + 1 :]
+        # multiply them and add to answer array
         ans.append(math.prod(temp))
 
     return ans
