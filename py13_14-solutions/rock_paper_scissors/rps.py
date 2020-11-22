@@ -7,16 +7,18 @@ def rock_paper_scissors(n):
     if n == 0:
         return [[]]
 
-    ans = []
-    plays = ["rock", "paper", "scissors"]
+    rps = ["rock", "paper", "scissors"]
 
     def inner(n):
         if n == 0:
-            ans.append([])
+            return []
 
-    inner(n)
+        for p in rps:
+            pass
 
-    return ans
+        return inner(n - 1)
+
+    return inner(n)
 
 
 if __name__ == "__main__":
