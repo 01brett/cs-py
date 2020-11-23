@@ -9,16 +9,15 @@ def rock_paper_scissors(n):
 
     rps = ["rock", "paper", "scissors"]
 
+    ans = []
+
     def inner(n):
-        if n == 0:
-            return []
+        for i in range(3 ^ n):
+            temp = []
 
-        for p in rps:
-            pass
+            ans.append(temp)
 
-        return inner(n - 1)
-
-    return inner(n)
+    return ans
 
 
 if __name__ == "__main__":
