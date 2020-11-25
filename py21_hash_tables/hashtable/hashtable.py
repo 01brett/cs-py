@@ -179,7 +179,7 @@ class HashTable:
         Changes the capacity of the hash table and
         rehashes all key/value pairs.
         """
-        # capture old array
+        # capture old storage
         old_store = self.storage
         # reassign props with new values to allow us to use methods
         self.capacity = new_capacity
