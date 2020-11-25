@@ -28,10 +28,10 @@ def histo(s):
 
     for el in arr:
         word = el[0]
-        size = el[1]
-        if size >= 6:
+        word_count = el[1]
+        if word_count >= 6:
             space = longest_word - len(word)
-            print(f"{word}{' ' * space}  {'#' * size}")
+            print(f"{word}{' ' * space}  {'#' * word_count}")
 
 
 histo("robin.txt")
