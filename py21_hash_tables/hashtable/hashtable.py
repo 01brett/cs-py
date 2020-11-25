@@ -10,6 +10,10 @@ class HashTableNode:
 
 
 class HashTableList:
+    """
+    Linked list to manage head reference
+    """
+
     def __init__(self):
         self.head = None
 
