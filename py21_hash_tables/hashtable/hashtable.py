@@ -181,10 +181,12 @@ class HashTable:
         """
         # capture old storage
         old_store = self.storage
+        old_load = self.load
         # reassign props with new values to allow us to use methods
         self.capacity = new_capacity
         self.storage = [None] * self.capacity
-        self.load = 0
+        # set load to unoffensive number
+        self.load = 0.4
         # loop thru old store to grab and rehash everything
         for i in old_store:
             if i is None:  # this index was empty
@@ -192,7 +194,11 @@ class HashTable:
             cur_node = i.head
             while cur_node is not None:
                 self.put(cur_node.key, cur_node.value)
+                # negate the load we just added
+                self.load -= 1
                 cur_node = cur_node.next
+        # reassert the old load number now we've resized
+        self.load = old_load
 
 
 if __name__ == "__main__":
