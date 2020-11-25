@@ -1,12 +1,17 @@
-class HashTableEntry:
+class HashTableNode:
     """
-    Linked List hash table key/value pair
+    Linked List hash table node key/value pair
     """
 
     def __init__(self, key, value):
         self.key = key
         self.value = value
         self.next = None
+
+
+class HashTableList:
+    def __init__(self):
+        self.head = None
 
 
 # Hash table can't have fewer than this many slots
@@ -16,14 +21,13 @@ MIN_CAPACITY = 8
 class HashTable:
     """
     A hash table that with `capacity` buckets
-    that accepts string keys
-
-    Implement this.
+    that accepts string key
     """
 
-    def __init__(self, capacity=MIN_CAPACITY):
-        self.capacity = capacity
-        self.table = [None] * capacity
+    def __init__(self, capacity):
+        self.capacity = max(capacity, MIN_CAPACITY)
+        self.storage = [None] * self.capacity
+        self.load = 0
 
     def get_num_slots(self):
         """
@@ -32,38 +36,38 @@ class HashTable:
         but the number of slots in the main list.)
 
         One of the tests relies on this.
-
-        Implement this.
         """
-        return len(self.table)
+        return len(self.storage)
 
     def get_load_factor(self):
         """
         Return the load factor for this hash table.
-
-        Implement this.
         """
-        pass
+        return self.load / self.capacity
 
     def fnv1(self, key):
-        """
-        FNV-1 Hash, 64-bit
+        FNV_offset_basis = 14695981039346656037
+        FNV_prime = 1099511628211
 
-        Implement this, and/or DJB2.
-        """
+        hashed = FNV_offset_basis
 
-        pass
+        key_bytes = key.encode()
+        for byte in key_bytes:
+            hashed = hashed * FNV_prime
+            hashed = hashed ^ byte  # XOR bitwise operation
+
+        return hashed
 
     def djb2(self, key):
-        """
-        DJB2 hash, 32-bit
+        hashed = 5381
 
-        Implement this, and/or FNV-1.
-        """
-        hash_val = 5381
-        for c in key:
-            hash_val = (hash_val * 33) + ord(c)
-        return hash_val
+        key_bytes = key.encode()
+
+        for byte in key_bytes:
+            hashed = (hashed << 5) + byte  # bitwise left shift
+            # hashed = (hashed * 33) + byte
+
+        return hashed
 
     def hash_index(self, key):
         """
@@ -76,46 +80,115 @@ class HashTable:
     def put(self, key, value):
         """
         Store the value with the given key.
-
         Hash collisions should be handled with Linked List Chaining.
-
-        Implement this.
         """
+        load_factor = self.get_load_factor()
+        if load_factor > 0.7:
+            capacity = self.capacity * 2
+            self.resize(capacity)
+
         idx = self.hash_index(key)
-        self.table[idx] = value
+        # idx linked list is empty
+        if self.storage[idx] is None:
+            # init new linked list
+            self.storage[idx] = HashTableList()
+            ll = self.storage[idx]
+            # add entry to linked list
+            new_entry = HashTableNode(key, value)
+            # assigned new_entry to head/tail (since list is empty)
+            ll.head = new_entry
+            self.load += 1
+            return
+        # idx linked list is not empty
+        ll = self.storage[idx]
+        new_entry = HashTableNode(key, value)
+        # loop through linked list to see if we overwrite
+        cur_node = ll.head
+        while cur_node is not None:
+            # if we have the key, overwrite the value
+            if cur_node.key == key:
+                cur_node.value = value
+                return
+            # if the cur_node is the tail, add new_entry as new tail
+            if cur_node.next is None:
+                cur_node.next = new_entry
+                self.load += 1
+                return
+            # continue traversal
+            cur_node = cur_node.next
 
     def delete(self, key):
         """
         Remove the value stored with the given key.
-
         Print a warning if the key is not found.
-
-        Implement this.
         """
         idx = self.hash_index(key)
-        self.table[idx] = None
+
+        if self.storage[idx] == None:
+            print("Warning: key not found")
+            return
+
+        # idx linked list is not empty
+        ll = self.storage[idx]
+        # loop through linked list
+        prev_node = None
+        cur_node = ll.head
+        while cur_node is not None:
+            # if we have the key
+            if cur_node.key == key:
+                if prev_node is None and cur_node.next is None:
+                    ll.head = None
+                elif prev_node is None and cur_node.next:
+                    ll.head = cur_node.next
+                else:
+                    prev_node.next = cur_node.next
+                self.load -= 1
+                return
+            # continue traversal
+            prev_node = cur_node
+            cur_node = cur_node.next
+        # we never found it
+        print("Warning: key not found")
 
     def get(self, key):
         """
         Retrieve the value stored with the given key.
-
         Returns None if the key is not found.
-
-        Implement this.
         """
         idx = self.hash_index(key)
-        val = self.table[idx]
-
-        return val if val else None
+        if self.storage[idx] is not None:
+            # idx linked list is not empty
+            ll = self.storage[idx]
+            # loop through linked list to find our target
+            cur_node = ll.head
+            while cur_node is not None:
+                # if we find our target, return it's value
+                if cur_node.key == key:
+                    return cur_node.value
+                # continue traversal
+                cur_node = cur_node.next
+        # we never found our target
+        return None
 
     def resize(self, new_capacity):
         """
         Changes the capacity of the hash table and
         rehashes all key/value pairs.
-
-        Implement this.
         """
-        pass
+        # capture old array
+        old_store = self.storage
+        # reassign props with new values to allow us to use methods
+        self.capacity = new_capacity
+        self.storage = [None] * self.capacity
+        self.load = 0
+        # loop thru old store to grab and rehash everything
+        for i in old_store:
+            if i is None:  # this index was empty
+                continue
+            cur_node = i.head
+            while cur_node is not None:
+                self.put(cur_node.key, cur_node.value)
+                cur_node = cur_node.next
 
 
 if __name__ == "__main__":
