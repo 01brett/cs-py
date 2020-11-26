@@ -14,7 +14,7 @@ def f(x):
 
 def sumdiff(q):
     seen = {}
-    lookup = {n: f(n) for n in q}
+    refs = {n: f(n) for n in q}
 
     def fn(src, arr):
         combo = tuple(arr)
@@ -24,12 +24,7 @@ def sumdiff(q):
         if len(arr) == 4:
             seen[combo] = True  # mark this combo in cache
             a, b, c, d = combo  # pull out refs from combo
-            ra, rb, rc, rd = (
-                lookup[a],
-                lookup[b],
-                lookup[c],
-                lookup[d],
-            )  # grab refs from lookup
+            ra, rb, rc, rd = refs[a], refs[b], refs[c], refs[d]  # grab computed refs
             if ra + rb == rc - rd:  # see if results hit our criteria
                 print(f"f({a}) + f({b}) = f({c}) - f({d})\t{ra} + {rb} = {rc} - {rd}")
             return  # exit out of this call to prevent further loop
