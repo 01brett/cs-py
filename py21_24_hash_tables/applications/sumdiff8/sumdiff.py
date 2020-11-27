@@ -12,6 +12,20 @@ def f(x):
     return x * 4 + 6
 
 
+# ITERATIVE
+# def sumdiff(q):
+#     seen = {}
+#     refs = {n: f(n) for n in q}
+
+#     # keep track of where we're at
+#     count = [0 for _ in q]
+#     # arr to mess with -> start at first el
+#     arr = [q[0] for _ in range(4)]
+
+#     while count[-1] < len(q):
+
+
+# RECURSIVE
 def sumdiff(q):
     seen = {}
     refs = {n: f(n) for n in q}
@@ -39,5 +53,5 @@ def sumdiff(q):
 
 print(f"\ntuple: {q1}\n")
 sumdiff(q1)
-print(f"\nset: {q2}\n")
-sumdiff(q2)
+# print(f"\nset: {q2}\n")
+# sumdiff(q2)
