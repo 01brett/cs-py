@@ -1,8 +1,14 @@
-def has_negatives(a):
-    """
-    YOUR CODE HERE
-    """
-    # Your code here
+def has_negatives(arr):
+    result = []
+    cache = {}
+    for n in arr:
+        if n == 0:  # handle edge case for 0
+            continue
+        if n not in cache:
+            cache[n] = True
+
+        if -n in cache:
+            result.append(abs(n))
 
     return result
 
