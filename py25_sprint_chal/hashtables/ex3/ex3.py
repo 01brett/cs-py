@@ -1,8 +1,16 @@
 def intersection(arrays):
-    """
-    YOUR CODE HERE
-    """
-    # Your code here
+    cache = {}
+    result = []
+    num_of_arrays = len(arrays)
+
+    for arr in arrays:
+        for num in arr:
+            if num not in cache:
+                cache[num] = 0
+            cache[num] += 1
+            # check if this number has been found in all lists
+            if cache[num] == num_of_arrays:
+                result.append(num)
 
     return result
 
