@@ -126,8 +126,8 @@ class Graph:
                     s.push(next_path)
 
     def dfs_recursive(self, vertex, target, visited=set(), path=[]):
+        path = path + [vertex]  # this is the only way the path stuff works... why!?
         visited.add(vertex)
-        path = path + [vertex]
 
         if vertex == target:
             return path
