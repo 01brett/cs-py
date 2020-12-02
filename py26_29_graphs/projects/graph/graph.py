@@ -64,19 +64,19 @@ class Graph:
                 for neighbor in self.get_neighbors(vertex):
                     s.push(neighbor)
 
-    def dft_recursive(self, vertex, visited=set()):
-        print(vertex)
-        visited.add(vertex)
+    def dft_recursive(self, starting_vertex, visited=set()):
+        print(starting_vertex)
+        visited.add(starting_vertex)
 
-        for neighbor in self.get_neighbors(vertex):
-            if neighbor not in visited:  # don't bother w/ neighbor if we've been there
+        for neighbor in self.get_neighbors(starting_vertex):
+            if neighbor not in visited:  # only recurse w/ neighbor if not seen before
                 self.dft_recursive(neighbor, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
         q = Queue()
-        q.enqueue([starting_vertex])
-
         visited = set()
+
+        q.enqueue([starting_vertex])
 
         while q.size() > 0:
             path = q.dequeue()
@@ -89,9 +89,9 @@ class Graph:
 
             for neighbor in self.get_neighbors(last_vertex):
                 if neighbor not in visited:
-                    next_path = path.copy()
-                    next_path.append(neighbor)
-                    q.enqueue(next_path)
+                    new_path = path.copy()
+                    new_path.append(neighbor)
+                    q.enqueue(new_path)
 
     def dfs(self, starting_vertex, destination_vertex):
         s = Stack()
@@ -110,12 +110,12 @@ class Graph:
 
             for neighbor in self.get_neighbors(last_vertex):
                 if neighbor not in visited:
-                    next_path = path.copy()
-                    next_path.append(neighbor)
-                    s.push(next_path)
+                    new_path = path.copy()
+                    new_path.append(neighbor)
+                    s.push(new_path)
 
-    def dfs_recursive(self, vertex, target, visited=set(), arr=[]):
-        path = arr.copy()
+    def dfs_recursive(self, vertex, target, visited=set(), prev_path=[]):
+        path = prev_path.copy()
         path.append(vertex)
 
         visited.add(vertex)
@@ -125,9 +125,9 @@ class Graph:
 
         for neighbor in self.get_neighbors(vertex):
             if neighbor not in visited:
-                # if dead end, this implicitly becomes None
+                # this allows us to keep going in loop and not return after first neighbor
                 found = self.dfs_recursive(neighbor, target, visited, path)
-                if found:  # the dead ends are None and fail this conditional
+                if found:  # non-None recursions will pass
                     return found
 
 
