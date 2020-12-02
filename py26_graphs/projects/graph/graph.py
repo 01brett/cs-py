@@ -33,10 +33,6 @@ class Graph:
         return self.vertices[vertex_id]
 
     def bft(self, starting_vertex):
-        """
-        Print each vertex in breadth-first order
-        beginning from starting_vertex.
-        """
         q = Queue()
         visited = set()
 
@@ -53,10 +49,6 @@ class Graph:
                     q.enqueue(neighbor)
 
     def dft(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-        """
         s = Stack()
         visited = set()
 
@@ -73,14 +65,12 @@ class Graph:
                     s.push(neighbor)
 
     def dft_recursive(self, vertex, visited=set()):
-        if vertex in visited:
-            return
-
         print(vertex)
         visited.add(vertex)
 
         for neighbor in self.get_neighbors(vertex):
-            self.dft_recursive(neighbor, visited)
+            if neighbor not in visited:  # don't bother w/ neighbor if we've been there
+                self.dft_recursive(neighbor, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
         q = Queue()
@@ -98,7 +88,6 @@ class Graph:
             visited.add(last_vertex)
 
             for neighbor in self.get_neighbors(last_vertex):
-                # don't even add the neighbor if we've been there
                 if neighbor not in visited:
                     next_path = path.copy()
                     next_path.append(neighbor)
@@ -126,7 +115,9 @@ class Graph:
                     s.push(next_path)
 
     def dfs_recursive(self, vertex, target, visited=set(), arr=[]):
-        path = arr + [vertex]  # this is the only way the path stuff works... why!?
+        path = arr.copy()
+        path.append(vertex)
+
         visited.add(vertex)
 
         if vertex == target:
@@ -134,9 +125,9 @@ class Graph:
 
         for neighbor in self.get_neighbors(vertex):
             if neighbor not in visited:
-                # this appears to mitigate "dead ends"
+                # if dead end, this implicitly becomes None
                 found = self.dfs_recursive(neighbor, target, visited, path)
-                if found:
+                if found:  # the dead ends are None and fail this conditional
                     return found
 
 
