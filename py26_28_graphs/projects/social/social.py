@@ -79,12 +79,12 @@ class SocialGraph:
         q = [user_id]
 
         while len(q) > 0:
-            node = q.pop(0)
+            user = q.pop(0)
 
-            if node not in visited:
-                visited[node] = list(self.friendships[node])
+            if user not in visited:
+                visited[user] = list(self.friendships[user])
 
-                for friend in self.friendships[node]:
+                for friend in self.friendships[user]:
                     q.append(friend)
 
         return visited
