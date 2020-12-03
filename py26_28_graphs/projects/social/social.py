@@ -1,5 +1,4 @@
 import random
-import math
 
 
 class User:
@@ -28,6 +27,19 @@ class SocialGraph:
             self.friendships[user_id].add(friend_id)
             self.friendships[friend_id].add(user_id)
 
+    def add_friendship2(self, user_id, friend_id):
+        if user_id == friend_id:
+            return False
+        elif (
+            friend_id in self.friendships[user_id]
+            or user_id in self.friendships[friend_id]
+        ):
+            return False
+
+        self.friendships[user_id].add(friend_id)
+        self.friendships[friend_id].add(user_id)
+        return True
+
     def add_user(self, name):
         """
         Create a new user with a sequential integer ID
@@ -36,7 +48,7 @@ class SocialGraph:
         self.users[self.last_id] = User(name)
         self.friendships[self.last_id] = set()
 
-    def populate_graph(self, num_users, avg_friendships):
+    def populate_graph(self, num_of_users, avg_num_of_friendships):
         """
         Takes a number of users and an average number of friendships
         as arguments
@@ -46,24 +58,44 @@ class SocialGraph:
 
         The number of users must be greater than the average number of friendships.
         """
+        # these lines reset our graph
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        for i in range(0, num_users):
+
+        # add users to the graph
+        for i in range(1, num_of_users):  # start @ 1 to match id
             self.add_user(f"User {i}")
-        possible_friendships = []
-        # Generate all possible friendships possible
+
+        target_friendships = num_of_users * avg_num_of_friendships
+        total_friendships = 0
+
+        while total_friendships < target_friendships:
+            user_id = random.randint(1, self.last_id)
+            friend_id = random.randint(1, self.last_id)
+            # from our amended add_friendship to return boolean
+            if self.add_friendship2(user_id, friend_id):
+                # inc by 2 since we're adding friendship to both users
+                total_friendships += 2
+
+        """
+        # generate all combinations of friendships
+        possible_friendships = []  # this is the performance bottleneck
+
+        # loop through our users dict
         for user_id in self.users:
-            # To avoid duplicating friendships, create friendships from user_id + 1
+            # take advantage of sequential ids to avoid duplicates
             for friend_id in range(user_id + 1, self.last_id + 1):
-                possible_friendships.append((user_id, friend_id))
-        # Shuffle the entire array of possible friendships
-        random.shuffle(possible_friendships)
-        # Select the first num_users * avg_friendships / 2
-        # We / 2 because a friendship is a bidirectional edge (we're essentially adding two edges)
-        for i in range(0, math.floor(num_users * avg_friendships / 2)):
+                possible_friendships.append((user_id, friend_id))  # tuple of friendship
+
+        random.shuffle(possible_friendships)  # built-in method for shuffling!
+
+        # b/c we're adding friendships in both directions, we need to floor divide by 2 (avoid floats)
+        for i in range(num_of_users * avg_num_of_friendships // 2):
             friendship = possible_friendships[i]
-            self.add_friendship(friendship[0], friendship[1])
+            # self.add_friendship(friendship[0], friendship[1])
+            self.add_friendship(*friendship)  # equivalent to ^^ as it unpacks the tuple
+        """
 
     def get_all_social_paths(self, user_id):
         """
@@ -94,5 +126,5 @@ if __name__ == "__main__":
     sg = SocialGraph()
     sg.populate_graph(10, 2)
     print(sg.friendships)
-    connections = sg.get_all_social_paths(1)
-    print(connections)
+    # connections = sg.get_all_social_paths(1)
+    # print(connections)
