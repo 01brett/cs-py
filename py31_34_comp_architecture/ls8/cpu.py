@@ -76,7 +76,6 @@ class CPU:
     def run(self):
         """Run the CPU."""
         running = True
-
         while running:
             ir = self.ram[self.pc]
             operand_a = self.ram_read(self.pc + 1)
@@ -94,10 +93,8 @@ class CPU:
                 reg_val = operand_b
                 self.reg[reg_num] = reg_val
                 self.pc += 3  # 3 byte instructions
-                pass
 
             elif ir == 0b01000111:  # PRN
                 reg_num = operand_a
                 print(self.reg[reg_num])
                 self.pc += 2  # 2 byte instructions
-                pass
