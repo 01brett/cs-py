@@ -5,7 +5,7 @@
 # 3 - SAVE_REG store a val in a register
 # 4 - PRINT_REG print the register val in decimal
 
-memory = [  # think of as a big arrary of bytes, 8-bits per bytes
+ram = [  # think of as a big arrary of bytes, 8-bits per bytes
     1,  # PRINT_HELLO
     #
     3,  # SAVE_REG r4 37 are instruction itself, also called "opcode"
@@ -18,7 +18,7 @@ memory = [  # think of as a big arrary of bytes, 8-bits per bytes
     2,  # HALT
 ]
 
-registers = [0] * 8
+reg = [0] * 8
 
 running = True
 
@@ -26,7 +26,7 @@ running = True
 pc = 0  # program counter, the index into memory of the currently-executing instruction
 
 while running:
-    ir = memory[pc]  # instruction register
+    ir = ram[pc]  # instruction register
 
     if ir == 1:  # PRINT_HELLO
         print("HELLO")
@@ -37,12 +37,12 @@ while running:
         pc += 1  # 1 byte instruction
 
     elif ir == 3:  # SAVE_REG
-        reg_num = memory[pc + 1]
-        reg_val = memory[pc + 2]
-        registers[reg_num] = reg_val
+        reg_num = ram[pc + 1]
+        reg_val = ram[pc + 2]
+        reg[reg_num] = reg_val
         pc += 3  # 3 byte instruction, so we increment by 3 (3 indexes in mem array)
 
     elif ir == 4:  # PRINT_REG
-        reg_num = memory[pc + 1]
-        print(registers[reg_num])
+        reg_num = ram[pc + 1]
+        print(reg[reg_num])
         pc += 2  # 2 byte instruction
