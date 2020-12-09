@@ -16,7 +16,7 @@ reg = [0] * 8
 address = 0
 
 if len(sys.argv) != 2:
-    print("Usage: day2.py prog_name")
+    print("Usage: d2.py prog_name")
     sys.exit()
 
 # error codes you pass to sys.exit() mean something to bash scripting

@@ -20,6 +20,7 @@ class CPU:
         self.ram = [0] * 256
         self.pc = 0
         self.fl = 0
+        # self.sp =
         self.halted = True
         self.disp = {
             NOP: self._nop,
