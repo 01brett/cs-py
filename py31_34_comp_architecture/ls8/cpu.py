@@ -2,13 +2,18 @@
 
 import sys
 
-"""Op Code Constants"""
+"""Constants"""
+SP = 7
+
+"""Op Codes"""
 NOP = 0b00000000
 HLT = 0b00000001
 LDI = 0b10000010
 PRN = 0b01000111
 ADD = 0b10100000
 MUL = 0b10100010
+PUSH = 0b01000101
+POP = 0b01000110
 
 
 class CPU:
@@ -20,7 +25,6 @@ class CPU:
         self.ram = [0] * 256
         self.pc = 0
         self.fl = 0
-        # self.sp =
         self.halted = True
         self.disp = {
             NOP: self._nop,
@@ -29,6 +33,8 @@ class CPU:
             PRN: self._prn,
             ADD: self._add,
             MUL: self._mul,
+            PUSH: self._push,
+            POP: self._pop,
         }
 
     def _nop():
@@ -42,6 +48,18 @@ class CPU:
 
     def _prn(self, reg_num):
         print(self.reg[reg_num])
+
+    def _push(self, reg_num):
+        self.reg[SP] -= 1
+        value = self.reg[reg_num]
+        top_stack_addr = self.reg[SP]
+        self.ram[top_stack_addr] = value
+
+    def _pop(self, reg_num):
+        top_stack_addr = self.reg[SP]
+        value = self.ram[top_stack_addr]
+        self.reg[reg_num] = value
+        self.reg[SP] += 1
 
     def _add(self, reg_a, reg_b):
         self.reg[reg_a] += self.reg[reg_b]
@@ -59,7 +77,7 @@ class CPU:
         address = 0
 
         try:
-            with open("examples/" + sys.argv[1] + ".ls8") as f:
+            with open(sys.argv[1]) as f:
                 for line in f:
                     line = line.strip()
 
