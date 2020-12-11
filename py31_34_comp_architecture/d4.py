@@ -113,7 +113,7 @@ while not halted:
         # push it onto the stack
         push_val(return_addr)
         # get subroutine address from register
-        subroutine_addr = reg[operand_a]  # operand_a = reg[pc + 1]
+        subroutine_addr = reg[pc + 1]
         # jump to it
         pc = subroutine_addr
 
