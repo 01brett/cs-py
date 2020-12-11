@@ -22,7 +22,7 @@ class CPU:
             0b10000010: self.ldi,
             0b01000111: self.prn,
             0b10100000: self.add,
-            0b10100111: self._cmp,
+            0b10100111: self.compare,
             0b10100010: self.mul,
             0b01000101: self.push,
             0b01000110: self.pop,
@@ -55,8 +55,7 @@ class CPU:
         else:
             self.pc += 2
 
-    def _cmp(self, reg_a, reg_b):
-        # 00000LGE
+    def compare(self, reg_a, reg_b):
         if self.reg[reg_a] < self.reg[reg_b]:
             # 00000L00
             self.fl = 0b00000100
@@ -151,18 +150,6 @@ class CPU:
         except FileNotFoundError:
             print(f"File not found: {sys.argv[1]}")
             sys.exit()
-
-    def alu(self, op, reg_a, reg_b):
-        """ALU operations."""
-
-        if op == 0b10100000:
-            self.reg[reg_a] += self.reg[reg_b]
-
-        elif op == 0b10100010:
-            self.reg[reg_a] *= self.reg[reg_b]
-
-        else:
-            raise Exception("Unsupported ALU operation")
 
     def trace(self):
         """
