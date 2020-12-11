@@ -44,18 +44,28 @@ class CPU:
         self.pc = self.reg[reg_num]
 
     def jne(self, reg_num):
-        equal = (self.fl & 0b00000001) >> 7
-        if not equal:
+        if self.fl != 0b00000001:
             self.jmp(reg_num)
         else:
             self.pc += 2
 
     def jeq(self, reg_num):
-        equal = (self.fl & 0b00000001) >> 7
-        if equal:
+        if self.fl == 0b00000001:
             self.jmp(reg_num)
         else:
             self.pc += 2
+
+    def _cmp(self, reg_a, reg_b):
+        # 00000LGE
+        if self.reg[reg_a] < self.reg[reg_b]:
+            # 00000L00
+            self.fl = 0b00000100
+        elif self.reg[reg_a] > self.reg[reg_b]:
+            # 000000G0
+            self.fl = 0b00000010
+        else:
+            # 0000000E
+            self.fl = 0b00000001
 
     def ldi(self, reg_num, reg_val):
         self.reg[reg_num] = reg_val
@@ -101,18 +111,6 @@ class CPU:
 
     def add(self, reg_a, reg_b):
         self.reg[reg_a] += self.reg[reg_b]
-
-    def _cmp(self, reg_a, reg_b):
-        # 00000LGE
-        if reg_a < reg_b:
-            # 00000L00
-            self.fl = self.fl | 0b00000100
-        elif reg_a > reg_b:
-            # 000000G0
-            self.fl = self.fl | 0b00000010
-        else:
-            # 0000000E
-            self.fl = self.fl | 0b00000001
 
     def mul(self, reg_a, reg_b):
         self.reg[reg_a] *= self.reg[reg_b]
