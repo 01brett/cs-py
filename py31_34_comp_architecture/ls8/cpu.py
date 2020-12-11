@@ -14,6 +14,8 @@ ADD = 0b10100000
 MUL = 0b10100010
 PUSH = 0b01000101
 POP = 0b01000110
+CALL = 0b01010000
+RET = 0b00010001
 
 
 class CPU:
@@ -35,6 +37,8 @@ class CPU:
             MUL: self._mul,
             PUSH: self._push,
             POP: self._pop,
+            CALL: self._call,
+            RET: self._ret,
         }
 
     def _nop():
@@ -60,6 +64,30 @@ class CPU:
         value = self.ram[top_stack_addr]
         self.reg[reg_num] = value
         self.reg[SP] += 1
+
+    def _call(self, reg_num):
+        # decrement stack pointer
+        self.reg[SP] -= 1
+        # copy value onto the stack
+        top_stack_addr = self.reg[SP]
+        # get addr of next instruct
+        return_addr = self.pc + 2
+        # push it onto the stack
+        self.ram[top_stack_addr] = return_addr  # return_addr
+        # get subroutine address from register
+        subroutine_addr = self.reg[reg_num]
+        # jump to it
+        self.pc = subroutine_addr
+
+    def _ret(self):
+        # get value from top of stack
+        top_stack_addr = self.reg[SP]
+        value = self.ram[top_stack_addr]
+        self.reg[SP] += 1
+        # return_address from top of stack
+        return_addr = value
+        # store addr in prog_counter
+        self.pc = return_addr
 
     def _add(self, reg_a, reg_b):
         self.reg[reg_a] += self.reg[reg_b]
@@ -166,7 +194,11 @@ class CPU:
                 print(f"Unknown op_code: {ir}")
                 sys.exit()
 
-            # add 1 for the op code
-            instruction_len = num_operands + 1
-            # increment the prog_counter dynamically
-            self.pc += instruction_len
+            # check if opcode will set pc directly
+            sets_pc = (ir & 0b00010000) >> 4
+
+            if not sets_pc:
+                # add 1 for the op code
+                instruction_len = num_operands + 1
+                # increment the prog_counter dynamically
+                self.pc += instruction_len
