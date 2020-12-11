@@ -5,19 +5,6 @@ import sys
 """Constants"""
 SP = 7
 
-"""Op Codes"""
-NOP = 0b00000000
-HLT = 0b00000001
-LDI = 0b10000010
-PRN = 0b01000111
-ADD = 0b10100000
-MUL = 0b10100010
-PUSH = 0b01000101
-POP = 0b01000110
-CALL = 0b01010000
-RET = 0b00010001
-ST = 0b10000100
-
 
 class CPU:
     """Main CPU class."""
@@ -27,47 +14,68 @@ class CPU:
         self.reg = [0] * 7 + [0xF4]
         self.ram = [0] * 256
         self.pc = 0
-        self.fl = 0
+        self.fl = 0b00000000  # 00000LGE
         self.halted = True
         self.disp = {
-            NOP: self._nop,
-            HLT: self._hlt,
-            LDI: self._ldi,
-            PRN: self._prn,
-            ADD: self._add,
-            MUL: self._mul,
-            PUSH: self._push,
-            POP: self._pop,
-            CALL: self._call,
-            RET: self._ret,
-            ST: self._st,
+            0b00000000: self.nop,
+            0b00000001: self.hlt,
+            0b10000010: self.ldi,
+            0b01000111: self.prn,
+            0b10100000: self.add,
+            0b10100111: self._cmp,
+            0b10100010: self.mul,
+            0b01000101: self.push,
+            0b01000110: self.pop,
+            0b01010000: self.call,
+            0b00010001: self.ret,
+            0b10000100: self.st,
+            0b01010100: self.jmp,
+            0b01010101: self.jeq,
+            0b01010110: self.jne,
         }
 
-    def _nop():
+    def nop():
         pass
 
-    def _hlt(self):
+    def hlt(self):
         self.halted = True
 
-    def _ldi(self, reg_num, reg_val):
+    def jmp(self, reg_num):
+        self.pc = self.reg[reg_num]
+
+    def jne(self, reg_num):
+        equal = (self.fl & 0b00000001) >> 7
+        if not equal:
+            self.jmp(reg_num)
+        else:
+            self.pc += 2
+
+    def jeq(self, reg_num):
+        equal = (self.fl & 0b00000001) >> 7
+        if equal:
+            self.jmp(reg_num)
+        else:
+            self.pc += 2
+
+    def ldi(self, reg_num, reg_val):
         self.reg[reg_num] = reg_val
 
-    def _prn(self, reg_num):
+    def prn(self, reg_num):
         print(self.reg[reg_num])
 
-    def _push(self, reg_num):
+    def push(self, reg_num):
         self.reg[SP] -= 1
         value = self.reg[reg_num]
         top_stack_addr = self.reg[SP]
         self.ram[top_stack_addr] = value
 
-    def _pop(self, reg_num):
+    def pop(self, reg_num):
         top_stack_addr = self.reg[SP]
         value = self.ram[top_stack_addr]
         self.reg[reg_num] = value
         self.reg[SP] += 1
 
-    def _call(self, reg_num):
+    def call(self, reg_num):
         # decrement stack pointer
         self.reg[SP] -= 1
         # copy value onto the stack
@@ -81,7 +89,7 @@ class CPU:
         # jump to it
         self.pc = subroutine_addr
 
-    def _ret(self):
+    def ret(self):
         # get value from top of stack
         top_stack_addr = self.reg[SP]
         value = self.ram[top_stack_addr]
@@ -91,13 +99,25 @@ class CPU:
         # store addr in prog_counter
         self.pc = return_addr
 
-    def _add(self, reg_a, reg_b):
+    def add(self, reg_a, reg_b):
         self.reg[reg_a] += self.reg[reg_b]
 
-    def _mul(self, reg_a, reg_b):
+    def _cmp(self, reg_a, reg_b):
+        # 00000LGE
+        if reg_a < reg_b:
+            # 00000L00
+            self.fl = self.fl | 0b00000100
+        elif reg_a > reg_b:
+            # 000000G0
+            self.fl = self.fl | 0b00000010
+        else:
+            # 0000000E
+            self.fl = self.fl | 0b00000001
+
+    def mul(self, reg_a, reg_b):
         self.reg[reg_a] *= self.reg[reg_b]
 
-    def _st(self, reg_a, reg_b):
+    def st(self, reg_a, reg_b):
         addr = self.reg[reg_a]
         val = self.reg[reg_b]
         self.ram[addr] = val
@@ -137,10 +157,10 @@ class CPU:
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
 
-        if op == ADD:
+        if op == 0b10100000:
             self.reg[reg_a] += self.reg[reg_b]
 
-        elif op == MUL:
+        elif op == 0b10100010:
             self.reg[reg_a] *= self.reg[reg_b]
 
         else:
@@ -153,15 +173,7 @@ class CPU:
         """
 
         print(
-            f"TRACE: %02X | %02X %02X %02X |"
-            % (
-                self.pc,
-                # self.fl,
-                # self.ie,
-                self.ram_read(self.pc),
-                self.ram_read(self.pc + 1),
-                self.ram_read(self.pc + 2),
-            ),
+            f"pc: {self.pc:08b} fl: {self.fl:08b} | {self.ram_read(self.pc):08b} {self.ram_read(self.pc + 1):08b} {self.ram_read(self.pc + 2):08b} |",
             end="",
         )
 
@@ -180,6 +192,7 @@ class CPU:
         """Run the CPU."""
         self.halted = False
         while not self.halted:
+            # self.trace()
             ir = self.ram[self.pc]
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
