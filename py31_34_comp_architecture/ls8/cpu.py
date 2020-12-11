@@ -195,6 +195,7 @@ class CPU:
                 sys.exit()
 
             # check if opcode will set pc directly
+            # using bitwise `AND` mask to filter extras
             sets_pc = (ir & 0b00010000) >> 4
 
             if not sets_pc:
