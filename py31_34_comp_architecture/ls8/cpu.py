@@ -16,6 +16,7 @@ PUSH = 0b01000101
 POP = 0b01000110
 CALL = 0b01010000
 RET = 0b00010001
+ST = 0b10000100
 
 
 class CPU:
@@ -39,6 +40,7 @@ class CPU:
             POP: self._pop,
             CALL: self._call,
             RET: self._ret,
+            ST: self._st,
         }
 
     def _nop():
@@ -94,6 +96,11 @@ class CPU:
 
     def _mul(self, reg_a, reg_b):
         self.reg[reg_a] *= self.reg[reg_b]
+
+    def _st(self, reg_a, reg_b):
+        addr = self.reg[reg_a]
+        val = self.reg[reg_b]
+        self.ram[addr] = val
 
     def load(self):
         """Load a program into memory."""
